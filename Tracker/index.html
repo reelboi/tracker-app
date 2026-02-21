@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>TrackPro - Transformation Tracker</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+
+<link href="style.css" rel="stylesheet"/></head>
+<body class="bg-grid">
+<div class="bg-glow glow-1"></div>
+<div class="bg-glow glow-2"></div>
+<div class="toast" id="toast">Data saved successfully</div>
+<div class="app-container">
+<!-- Sidebar -->
+<aside class="sidebar">
+<div class="sidebar-logo">
+<div class="logo-icon">TP</div>
+<div>
+<div style="font-weight: 700; font-size: 18px;">TrackPro</div>
+<div style="font-size: 11px; color: var(--text-secondary);">Transformation Tracker</div>
+</div>
+</div>
+<nav class="sidebar-nav">
+<div class="nav-item active" data-page="dashboard">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<rect height="7" rx="1" width="7" x="3" y="3"></rect>
+<rect height="7" rx="1" width="7" x="14" y="3"></rect>
+<rect height="7" rx="1" width="7" x="3" y="14"></rect>
+<rect height="7" rx="1" width="7" x="14" y="14"></rect>
+</svg>
+                    Dashboard
+                </div>
+<div class="nav-item" data-page="body">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+<circle cx="12" cy="7" r="4"></circle>
+</svg>
+                    Body Stats
+                </div>
+<div class="nav-item" data-page="strength">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M6.5 6.5L17.5 17.5M6.5 17.5L17.5 6.5M2 12h4M18 12h4M12 2v4M12 18v4"></path>
+</svg>
+                    Strength
+                </div>
+<div class="nav-item" data-page="workout">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M6.5 6.5h11M6.5 17.5h11M4 12h16M8 6.5v11M16 6.5v11"></path>
+</svg>
+                    Workout
+                </div>
+<div class="nav-item" data-page="diet">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+<line x1="6" x2="6" y1="1" y2="4"></line>
+<line x1="10" x2="10" y1="1" y2="4"></line>
+<line x1="14" x2="14" y1="1" y2="4"></line>
+</svg>
+                    Diet
+                </div>
+<div class="nav-item" data-page="supplements">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M10.5 2.5L2.5 10.5a4.95 4.95 0 1 0 7 7l8-8a4.95 4.95 0 1 0-7-7z"></path>
+<path d="M8.5 8.5l7 7"></path>
+</svg>
+                    Supplements
+                </div>
+<div class="nav-item" data-page="typing">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<rect height="16" rx="2" width="20" x="2" y="4"></rect>
+<path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M8 12h8M6 16h12"></path>
+</svg>
+                    Typing
+                </div>
+<div class="nav-item" data-page="nofap">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path>
+</svg>
+                    NoFap
+                </div>
+<div class="nav-item" data-page="progress">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M3 3v18h18"></path>
+<path d="M18 17V9M13 17V5M8 17v-3"></path>
+</svg>
+                    Progress
+                </div>
+</nav>
+</aside>
+<!-- Main Content -->
+<main class="main-content">
+<!-- Dashboard Page -->
+<section class="page active" id="page-dashboard">
+<div class="page-header">
+<h1 class="page-title">Dashboard</h1>
+<p class="page-subtitle">Track your daily transformation journey</p>
+</div>
+<div class="date-display">
+<div>
+<div class="current-date" id="current-date"></div>
+<div style="font-size: 12px; color: var(--text-secondary);">Day <span id="day-number">1</span> of transformation</div>
+</div>
+<div class="date-nav">
+<button class="date-nav-btn" onclick="changeDate(-1)">
+<svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16">
+<path d="M15 18l-6-6 6-6"></path>
+</svg>
+</button>
+<button class="date-nav-btn" onclick="goToToday()">
+<svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16">
+<circle cx="12" cy="12" r="10"></circle>
+<circle cx="12" cy="12" fill="currentColor" r="3"></circle>
+</svg>
+</button>
+<button class="date-nav-btn" onclick="changeDate(1)">
+<svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16">
+<path d="M9 18l6-6-6-6"></path>
+</svg>
+</button>
+</div>
+</div>
+<div class="quick-actions">
+<div class="quick-action" onclick="navigateTo('body')">
+<div class="quick-action-icon">
+<svg fill="none" height="20" stroke="var(--accent-primary)" stroke-width="2" viewbox="0 0 24 24" width="20">
+<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+<circle cx="12" cy="7" r="4"></circle>
+</svg>
+</div>
+<div class="quick-action-label">Log Body</div>
+</div>
+<div class="quick-action" onclick="navigateTo('workout')">
+<div class="quick-action-icon">
+<svg fill="none" height="20" stroke="var(--accent-secondary)" stroke-width="2" viewbox="0 0 24 24" width="20">
+<path d="M6.5 6.5h11M6.5 17.5h11M4 12h16M8 6.5v11M16 6.5v11"></path>
+</svg>
+</div>
+<div class="quick-action-label">Workout</div>
+</div>
+<div class="quick-action" onclick="navigateTo('diet')">
+<div class="quick-action-icon">
+<svg fill="none" height="20" stroke="var(--accent-tertiary)" stroke-width="2" viewbox="0 0 24 24" width="20">
+<path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+</svg>
+</div>
+<div class="quick-action-label">Add Meal</div>
+</div>
+<div class="quick-action" onclick="navigateTo('typing')">
+<div class="quick-action-icon">
+<svg fill="none" height="20" stroke="var(--success)" stroke-width="2" viewbox="0 0 24 24" width="20">
+<rect height="16" rx="2" width="20" x="2" y="4"></rect>
+<path d="M6 8h.01M10 8h.01M14 8h.01"></path>
+</svg>
+</div>
+<div class="quick-action-label">Typing</div>
+</div>
+</div>
+<div class="stats-grid" style="margin-bottom: 24px;">
+<div class="stat-card">
+<div class="stat-label">Current Weight</div>
+<div class="stat-value"><span id="dash-weight">86</span><span class="stat-unit">kg</span></div>
+<div class="stat-change positive" id="dash-weight-change">
+<svg fill="none" height="12" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="12">
+<path d="M12 19V5M5 12l7-7 7 7"></path>
+</svg>
+<span>0 kg</span>
+</div>
+</div>
+<div class="stat-card">
+<div class="stat-label">Body Fat</div>
+<div class="stat-value"><span id="dash-bf">34</span><span class="stat-unit">%</span></div>
+<div class="stat-change positive" id="dash-bf-change">
+<svg fill="none" height="12" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="12">
+<path d="M12 5v14M5 12l7 7 7-7"></path>
+</svg>
+<span>0%</span>
+</div>
+</div>
+<div class="stat-card">
+<div class="stat-label">NoFap Streak</div>
+<div class="stat-value"><span id="dash-streak">0</span><span class="stat-unit">days</span></div>
+<div style="font-size: 12px; color: var(--text-secondary); margin-top: 8px;">Best: <span id="dash-best-streak">0</span> days</div>
+</div>
+<div class="stat-card">
+<div class="stat-label">Typing Speed</div>
+<div class="stat-value"><span id="dash-wpm">0</span><span class="stat-unit">WPM</span></div>
+<div style="font-size: 12px; color: var(--text-secondary); margin-top: 8px;">Goal: 100 WPM</div>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px;">
+<div class="card">
+<div class="card-header">
+<span class="card-title">Strength Overview</span>
+</div>
+<div class="strength-bar-container">
+<div class="strength-bar-header">
+<span class="strength-bar-name">Bench Press</span>
+<span class="strength-bar-values"><span id="dash-bench">60</span> / 120 kg</span>
+</div>
+<div class="strength-bar">
+<div class="strength-bar-fill bench" id="bench-progress" style="width: 50%"></div>
+</div>
+</div>
+<div class="strength-bar-container">
+<div class="strength-bar-header">
+<span class="strength-bar-name">Squat</span>
+<span class="strength-bar-values"><span id="dash-squat">80</span> / 200 kg</span>
+</div>
+<div class="strength-bar">
+<div class="strength-bar-fill squat" id="squat-progress" style="width: 40%"></div>
+</div>
+</div>
+<div class="strength-bar-container">
+<div class="strength-bar-header">
+<span class="strength-bar-name">Deadlift</span>
+<span class="strength-bar-values"><span id="dash-deadlift">100</span> / 210 kg</span>
+</div>
+<div class="strength-bar">
+<div class="strength-bar-fill deadlift" id="deadlift-progress" style="width: 48%"></div>
+</div>
+</div>
+</div>
+<div class="card">
+<div class="card-header">
+<span class="card-title">Today's Macros</span>
+</div>
+<div id="dash-macros" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+<div style="background: var(--bg-elevated); padding: 16px; border-radius: 8px; text-align: center;">
+<div id="dash-calories" style="font-size: 24px; font-weight: 700;">0</div>
+<div style="font-size: 11px; color: var(--text-secondary); text-transform: uppercase;">Calories</div>
+</div>
+<div style="background: var(--bg-elevated); padding: 16px; border-radius: 8px; text-align: center;">
+<div id="dash-protein" style="font-size: 24px; font-weight: 700;">0</div>
+<div style="font-size: 11px; color: var(--text-secondary); text-transform: uppercase;">Protein (g)</div>
+</div>
+<div style="background: var(--bg-elevated); padding: 16px; border-radius: 8px; text-align: center;">
+<div id="dash-carbs" style="font-size: 24px; font-weight: 700;">0</div>
+<div style="font-size: 11px; color: var(--text-secondary); text-transform: uppercase;">Carbs (g)</div>
+</div>
+<div style="background: var(--bg-elevated); padding: 16px; border-radius: 8px; text-align: center;">
+<div id="dash-fat" style="font-size: 24px; font-weight: 700;">0</div>
+<div style="font-size: 11px; color: var(--text-secondary); text-transform: uppercase;">Fat (g)</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Body Stats Page -->
+<section class="page" id="page-body">
+<div class="page-header">
+<h1 class="page-title">Body Stats</h1>
+<p class="page-subtitle">Track your physical transformation</p>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 24px;">
+<div class="card">
+<h3 style="font-size: 16px; font-weight: 600; margin-bottom: 20px;">Today's Entry</h3>
+<div class="input-group">
+<label class="input-label">Weight (kg)</label>
+<input class="input-field" id="body-weight" placeholder="Enter weight" step="0.1" type="number"/>
+</div>
+<div class="input-group">
+<label class="input-label">Body Fat (%)</label>
+<input class="input-field" id="body-fat" placeholder="Enter body fat %" step="0.1" type="number"/>
+</div>
+<button class="btn btn-primary" onclick="saveBodyStats()" style="width: 100%;">Save Entry</button>
+</div>
+<div class="card">
+<h3 style="font-size: 16px; font-weight: 600; margin-bottom: 20px;">Calculated Stats</h3>
+<div style="display: grid; gap: 16px;">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--bg-elevated); border-radius: 8px;">
+<span style="color: var(--text-secondary);">BMI</span>
+<span class="mono" id="bmi-value" style="font-size: 18px; font-weight: 600;">--</span>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--bg-elevated); border-radius: 8px;">
+<span style="color: var(--text-secondary);">BMI Category</span>
+<span id="bmi-category" style="font-weight: 600;">--</span>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--bg-elevated); border-radius: 8px;">
+<span style="color: var(--text-secondary);">Weight Progress</span>
+<span id="weight-progress" style="font-weight: 600; color: var(--success);">--</span>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--bg-elevated); border-radius: 8px;">
+<span style="color: var(--text-secondary);">Body Fat Progress</span>
+<span id="bf-progress" style="font-weight: 600; color: var(--success);">--</span>
+</div>
+</div>
+</div>
+</div>
+<div class="card">
+<div class="card-header">
+<span class="card-title">Profile Info</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px;">
+<div>
+<div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Age</div>
+<div style="font-weight: 600;">21 years</div>
+</div>
+<div>
+<div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Height</div>
+<div style="font-weight: 600;">5'10" (178 cm)</div>
+</div>
+<div>
+<div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Starting Weight</div>
+<div style="font-weight: 600;">86 kg</div>
+</div>
+<div>
+<div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Goal Weight</div>
+<div style="font-weight: 600;">70 kg</div>
+</div>
+<div>
+<div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Starting BF</div>
+<div style="font-weight: 600;">34%</div>
+</div>
+<div>
+<div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Goal BF</div>
+<div style="font-weight: 600;">12-14%</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Strength Page -->
+<section class="page" id="page-strength">
+<div class="page-header">
+<h1 class="page-title">Strength Tracker</h1>
+<p class="page-subtitle">Monitor your progressive overload</p>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-bottom: 24px;">
+<div class="card">
+<h3 style="font-size: 16px; font-weight: 600; margin-bottom: 20px;">Log Today's Lifts</h3>
+<div class="input-group">
+<label class="input-label">Bench Press (kg)</label>
+<input class="input-field" id="lift-bench" placeholder="Enter weight" type="number"/>
+</div>
+<div class="input-group">
+<label class="input-label">Squat (kg)</label>
+<input class="input-field" id="lift-squat" placeholder="Enter weight" type="number"/>
+</div>
+<div class="input-group">
+<label class="input-label">Deadlift (kg)</label>
+<input class="input-field" id="lift-deadlift" placeholder="Enter weight" type="number"/>
+</div>
+<button class="btn btn-primary" onclick="saveLifts()" style="width: 100%;">Save Lifts</button>
+</div>
+<div class="card">
+<h3 style="font-size: 16px; font-weight: 600; margin-bottom: 20px;">Personal Records</h3>
+<div style="display: grid; gap: 12px;">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), transparent); border-radius: 8px; border-left: 3px solid var(--accent-secondary);">
+<div>
+<div style="font-size: 12px; color: var(--text-secondary);">Bench Press PR</div>
+<div id="pr-bench" style="font-size: 24px; font-weight: 700;">60 kg</div>
+</div>
+<div style="text-align: right;">
+<div style="font-size: 11px; color: var(--text-secondary);">Goal</div>
+<div style="font-weight: 600;">120 kg</div>
+</div>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), transparent); border-radius: 8px; border-left: 3px solid var(--accent-tertiary);">
+<div>
+<div style="font-size: 12px; color: var(--text-secondary);">Squat PR</div>
+<div id="pr-squat" style="font-size: 24px; font-weight: 700;">80 kg</div>
+</div>
+<div style="text-align: right;">
+<div style="font-size: 11px; color: var(--text-secondary);">Goal</div>
+<div style="font-weight: 600;">200 kg</div>
+</div>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), transparent); border-radius: 8px; border-left: 3px solid var(--success);">
+<div>
+<div style="font-size: 12px; color: var(--text-secondary);">Deadlift PR</div>
+<div id="pr-deadlift" style="font-size: 24px; font-weight: 700;">100 kg</div>
+</div>
+<div style="text-align: right;">
+<div style="font-size: 11px; color: var(--text-secondary);">Goal</div>
+<div style="font-weight: 600;">210 kg</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="card">
+<div class="card-header">
+<span class="card-title">Strength Progression Plan</span>
+</div>
+<div style="overflow-x: auto;">
+<table class="progression-table">
+<thead>
+<tr>
+<th>Week</th>
+<th>Bench Press</th>
+<th>Squat</th>
+<th>Deadlift</th>
+</tr>
+</thead>
+<tbody id="progression-table-body">
+</tbody>
+</table>
+</div>
+</div>
+<div class="card" style="margin-top: 16px;">
+<div class="card-header">
+<span class="card-title">Progress to Goals</span>
+</div>
+<div class="strength-bar-container">
+<div class="strength-bar-header">
+<span class="strength-bar-name">Bench Press</span>
+<span class="strength-bar-values"><span id="strength-bench-current">60</span>kg current / 120kg goal</span>
+</div>
+<div class="strength-bar">
+<div class="strength-bar-fill bench" id="strength-bench-bar" style="width: 50%"></div>
+</div>
+</div>
+<div class="strength-bar-container">
+<div class="strength-bar-header">
+<span class="strength-bar-name">Squat</span>
+<span class="strength-bar-values"><span id="strength-squat-current">80</span>kg current / 200kg goal</span>
+</div>
+<div class="strength-bar">
+<div class="strength-bar-fill squat" id="strength-squat-bar" style="width: 40%"></div>
+</div>
+</div>
+<div class="strength-bar-container">
+<div class="strength-bar-header">
+<span class="strength-bar-name">Deadlift</span>
+<span class="strength-bar-values"><span id="strength-deadlift-current">100</span>kg current / 210kg goal</span>
+</div>
+<div class="strength-bar">
+<div class="strength-bar-fill deadlift" id="strength-deadlift-bar" style="width: 48%"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Workout Page -->
+<section class="page" id="page-workout">
+<div class="page-header">
+<h1 class="page-title">Workout Program</h1>
+<p class="page-subtitle">Follow your weekly training split</p>
+</div>
+<div class="day-tabs" id="workout-day-tabs">
+<div class="day-tab active" data-day="0">Mon</div>
+<div class="day-tab" data-day="1">Tue</div>
+<div class="day-tab" data-day="2">Wed</div>
+<div class="day-tab" data-day="3">Thu</div>
+<div class="day-tab" data-day="4">Fri</div>
+<div class="day-tab" data-day="5">Sat</div>
+<div class="day-tab" data-day="6">Sun</div>
+</div>
+<div class="card" style="margin-bottom: 16px;">
+<div class="card-header">
+<span class="card-title" id="workout-day-title">Monday - Chest + Triceps + Abs</span>
+<div class="input-group" style="margin: 0; width: 120px;">
+<input class="input-field" id="workout-duration" placeholder="Duration (min)" style="padding: 8px 12px;" type="number"/>
+</div>
+</div>
+<div id="workout-exercises"></div>
+</div>
+<button class="btn btn-primary" onclick="saveWorkout()" style="width: 100%;">Save Workout</button>
+</section>
+<!-- Diet Page -->
+<section class="page" id="page-diet">
+<div class="page-header">
+<h1 class="page-title">Diet Tracker</h1>
+<p class="page-subtitle">Track your nutrition and macros</p>
+</div>
+<div class="card" style="margin-bottom: 16px;">
+<h3 style="font-size: 16px; font-weight: 600; margin-bottom: 20px;">Add Meal</h3>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+<div class="input-group" style="margin: 0;">
+<label class="input-label">Meal Name</label>
+<input class="input-field" id="meal-name" placeholder="e.g., Breakfast" type="text"/>
+</div>
+<div class="input-group" style="margin: 0;">
+<label class="input-label">Calories</label>
+<input class="input-field" id="meal-calories" placeholder="0" type="number"/>
+</div>
+<div class="input-group" style="margin: 0;">
+<label class="input-label">Protein (g)</label>
+<input class="input-field" id="meal-protein" placeholder="0" type="number"/>
+</div>
+<div class="input-group" style="margin: 0;">
+<label class="input-label">Carbs (g)</label>
+<input class="input-field" id="meal-carbs" placeholder="0" type="number"/>
+</div>
+<div class="input-group" style="margin: 0;">
+<label class="input-label">Fat (g)</label>
+<input class="input-field" id="meal-fat" placeholder="0" type="number"/>
+</div>
+</div>
+<button class="btn btn-primary" onclick="addMeal()" style="margin-top: 16px;">Add Meal</button>
+</div>
+<div class="card" style="margin-bottom: 16px;">
+<div class="card-header">
+<span class="card-title">Today's Totals</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;">
+<div style="text-align: center; padding: 16px; background: var(--bg-elevated); border-radius: 8px;">
+<div id="total-calories" style="font-size: 28px; font-weight: 700;">0</div>
+<div style="font-size: 11px; color: var(--text-secondary); text-transform: uppercase;">Calories</div>
+</div>
+<div style="text-align: center; padding: 16px; background: var(--bg-elevated); border-radius: 8px;">
+<div id="total-protein" style="font-size: 28px; font-weight: 700;">0</div>
+<div style="font-size: 11px; color: var(--text-secondary); text-transform: uppercase;">Protein</div>
+</div>
+<div style="text-align: center; padding: 16px; background: var(--bg-elevated); border-radius: 8px;">
+<div id="total-carbs" style="font-size: 28px; font-weight: 700;">0</div>
+<div style="font-size: 11px; color: var(--text-secondary); text-transform: uppercase;">Carbs</div>
+</div>
+<div style="text-align: center; padding: 16px; background: var(--bg-elevated); border-radius: 8px;">
+<div id="total-fat" style="font-size: 28px; font-weight: 700;">0</div>
+<div style="font-size: 11px; color: var(--text-secondary); text-transform: uppercase;">Fat</div>
+</div>
+</div>
+</div>
+<div class="card">
+<div class="card-header">
+<span class="card-title">Today's Meals</span>
+</div>
+<div id="meals-list"></div>
+</div>
+</section>
+<!-- Supplements Page -->
+<section class="page" id="page-supplements">
+<div class="page-header">
+<h1 class="page-title">Supplements</h1>
+<p class="page-subtitle">Track your daily supplement intake</p>
+</div>
+<div class="card">
+<div class="card-header">
+<span class="card-title">Daily Supplements</span>
+</div>
+<div id="supplements-list">
+<div class="supplement-card" data-supplement="protein">
+<div>
+<div class="supplement-name">Whey Protein</div>
+<div class="supplement-dose">1 scoop (25g protein)</div>
+</div>
+<div class="toggle" onclick="toggleSupplement(this, 'protein')"></div>
+</div>
+<div class="supplement-card" data-supplement="creatine">
+<div>
+<div class="supplement-name">Creatine</div>
+<div class="supplement-dose">5g daily</div>
+</div>
+<div class="toggle" onclick="toggleSupplement(this, 'creatine')"></div>
+</div>
+<div class="supplement-card" data-supplement="multivitamin">
+<div>
+<div class="supplement-name">Multivitamin</div>
+<div class="supplement-dose">1 tablet daily</div>
+</div>
+<div class="toggle" onclick="toggleSupplement(this, 'multivitamin')"></div>
+</div>
+<div class="supplement-card" data-supplement="evion">
+<div>
+<div class="supplement-name">Evion (Vitamin E)</div>
+<div class="supplement-dose">2 tablets daily</div>
+</div>
+<div class="toggle" onclick="toggleSupplement(this, 'evion')"></div>
+</div>
+<div class="supplement-card" data-supplement="ashwagandha">
+<div>
+<div class="supplement-name">Ashwagandha</div>
+<div class="supplement-dose">500mg daily</div>
+</div>
+<div class="toggle" onclick="toggleSupplement(this, 'ashwagandha')"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Typing Page -->
+<section class="page" id="page-typing">
+<div class="page-header">
+<h1 class="page-title">Typing Stats</h1>
+<p class="page-subtitle">Track your typing speed and accuracy</p>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-bottom: 24px;">
+<div class="card">
+<h3 style="font-size: 16px; font-weight: 600; margin-bottom: 20px;">Typing Statistics Entry</h3>
+<div class="input-group">
+<label class="input-label">Gross WPM</label>
+<input class="input-field" id="typing-gross" placeholder="Gross words per minute" type="number"/>
+</div>
+<div class="input-group">
+<label class="input-label">Net WPM</label>
+<input class="input-field" id="typing-net" placeholder="Net words per minute" type="number"/>
+</div>
+<div class="input-group">
+<label class="input-label">Errors</label>
+<input class="input-field" id="typing-errors" placeholder="Number of errors" type="number"/>
+</div>
+<div class="input-group">
+<label class="input-label">Accuracy (%)</label>
+<input class="input-field" id="typing-accuracy" placeholder="Accuracy percentage" step="0.1" type="number"/>
+</div>
+<div class="input-group">
+<label class="input-label">Time (minutes)</label>
+<input class="input-field" id="typing-time" placeholder="Typing duration" step="0.1" type="number"/>
+</div>
+<button class="btn btn-primary" onclick="saveTypingStats()" style="width: 100%;">Save Stats</button>
+</div>
+<div class="card">
+<h3 style="font-size: 16px; font-weight: 600; margin-bottom: 20px;">Word Count Entry</h3>
+<div class="input-group">
+<label class="input-label">Total Words Typed</label>
+<input class="input-field" id="typing-total-words" placeholder="Total words typed" type="number"/>
+</div>
+<div class="input-group">
+<label class="input-label">Words with Backspace</label>
+<input class="input-field" id="typing-backspace-words" placeholder="Words corrected with backspace" type="number"/>
+</div>
+<div class="input-group">
+<label class="input-label">Words without Backspace</label>
+<input class="input-field" id="typing-no-backspace-words" placeholder="Clean words without correction" type="number"/>
+</div>
+<button class="btn btn-secondary" onclick="saveWordCount()" style="width: 100%;">Save Word Count</button>
+</div>
+</div>
+<div class="card">
+<div class="card-header">
+<span class="card-title">Today's Typing Summary</span>
+<span style="font-size: 12px; color: var(--text-secondary);">Goal: 100 WPM</span>
+</div>
+<div class="typing-stats-grid">
+<div class="typing-stat">
+<div class="typing-stat-value" id="today-net-wpm">--</div>
+<div class="typing-stat-label">Net WPM</div>
+</div>
+<div class="typing-stat">
+<div class="typing-stat-value" id="today-accuracy">--%</div>
+<div class="typing-stat-label">Accuracy</div>
+</div>
+<div class="typing-stat">
+<div class="typing-stat-value" id="today-total-words">--</div>
+<div class="typing-stat-label">Total Words</div>
+</div>
+<div class="typing-stat">
+<div class="typing-stat-value" id="today-clean-words">--</div>
+<div class="typing-stat-label">Clean Words</div>
+</div>
+</div>
+</div>
+</section>
+<!-- NoFap Page -->
+<section class="page" id="page-nofap">
+<div class="page-header">
+<h1 class="page-title">NoFap Tracker</h1>
+<p class="page-subtitle">Build discipline and self-control</p>
+</div>
+<div class="streak-display" style="margin-bottom: 24px;">
+<div class="streak-flame">
+<svg fill="var(--accent-secondary)" height="32" stroke="none" viewbox="0 0 24 24" width="32">
+<path d="M12 23c-4.97 0-9-3.58-9-8 0-2.52 1.17-4.83 3-6.36V8c0-.55.45-1 1-1s1 .45 1 1v.64c.66-.32 1.32-.64 2-.9V6c0-.55.45-1 1-1s1 .45 1 1v1.14c.68.26 1.34.58 2 .9V7c0-.55.45-1 1-1s1 .45 1 1v.64c1.83 1.53 3 3.84 3 6.36 0 4.42-4.03 8-9 8z"></path>
+</svg>
+</div>
+<div class="streak-info">
+<h3><span id="current-streak">0</span> Days</h3>
+<p>Current Streak</p>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px;">
+<div class="card" style="text-align: center;">
+<div id="best-streak" style="font-size: 36px; font-weight: 700;">0</div>
+<div style="font-size: 12px; color: var(--text-secondary); text-transform: uppercase; margin-top: 4px;">Best Streak</div>
+</div>
+<div class="card" style="text-align: center;">
+<div id="total-clean-days" style="font-size: 36px; font-weight: 700;">0</div>
+<div style="font-size: 12px; color: var(--text-secondary); text-transform: uppercase; margin-top: 4px;">Total Clean Days</div>
+</div>
+</div>
+<div class="card">
+<h3 style="font-size: 16px; font-weight: 600; margin-bottom: 20px;">Today's Status</h3>
+<div style="display: flex; gap: 12px;">
+<button class="btn btn-success" onclick="markCleanDay()" style="flex: 1;">
+<svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18">
+<polyline points="20 6 9 17 4 12"></polyline>
+</svg>
+                            Clean Day
+                        </button>
+<button class="btn btn-danger" onclick="resetStreak()" style="flex: 1;">
+<svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18">
+<line x1="18" x2="6" y1="6" y2="18"></line>
+<line x1="6" x2="18" y1="6" y2="18"></line>
+</svg>
+                            Reset Streak
+                        </button>
+</div>
+</div>
+</section>
+<!-- Progress Page -->
+<section class="page" id="page-progress">
+<div class="page-header">
+<h1 class="page-title">Progress Charts</h1>
+<p class="page-subtitle">Visualize your transformation journey</p>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 16px;">
+<div class="card">
+<div class="card-header">
+<span class="card-title">Weight Progress</span>
+</div>
+<div class="chart-container">
+<canvas id="weight-chart"></canvas>
+</div>
+</div>
+<div class="card">
+<div class="card-header">
+<span class="card-title">Body Fat Progress</span>
+</div>
+<div class="chart-container">
+<canvas id="bf-chart"></canvas>
+</div>
+</div>
+<div class="card">
+<div class="card-header">
+<span class="card-title">Strength Progress</span>
+</div>
+<div class="chart-container">
+<canvas id="strength-chart"></canvas>
+</div>
+</div>
+<div class="card">
+<div class="card-header">
+<span class="card-title">Typing Speed Progress</span>
+</div>
+<div class="chart-container">
+<canvas id="typing-chart"></canvas>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Mobile Navigation - FIXED: Now scrollable with all items -->
+<nav class="mobile-nav">
+<div class="mobile-nav-scroll">
+<div class="mobile-nav-item active" data-page="dashboard">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<rect height="7" rx="1" width="7" x="3" y="3"></rect>
+<rect height="7" rx="1" width="7" x="14" y="3"></rect>
+<rect height="7" rx="1" width="7" x="3" y="14"></rect>
+<rect height="7" rx="1" width="7" x="14" y="14"></rect>
+</svg>
+<span>Home</span>
+</div>
+<div class="mobile-nav-item" data-page="body">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+<circle cx="12" cy="7" r="4"></circle>
+</svg>
+<span>Body</span>
+</div>
+<div class="mobile-nav-item" data-page="strength">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M6.5 6.5L17.5 17.5M6.5 17.5L17.5 6.5M2 12h4M18 12h4M12 2v4M12 18v4"></path>
+</svg>
+<span>Strength</span>
+</div>
+<div class="mobile-nav-item" data-page="workout">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M6.5 6.5h11M6.5 17.5h11M4 12h16M8 6.5v11M16 6.5v11"></path>
+</svg>
+<span>Workout</span>
+</div>
+<div class="mobile-nav-item" data-page="diet">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+</svg>
+<span>Diet</span>
+</div>
+<div class="mobile-nav-item" data-page="supplements">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M10.5 2.5L2.5 10.5a4.95 4.95 0 1 0 7 7l8-8a4.95 4.95 0 1 0-7-7z"></path>
+<path d="M8.5 8.5l7 7"></path>
+</svg>
+<span>Supps</span>
+</div>
+<div class="mobile-nav-item" data-page="typing">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<rect height="16" rx="2" width="20" x="2" y="4"></rect>
+<path d="M6 8h.01M10 8h.01M14 8h.01"></path>
+</svg>
+<span>Typing</span>
+</div>
+<div class="mobile-nav-item" data-page="nofap">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4"></path>
+</svg>
+<span>Streak</span>
+</div>
+<div class="mobile-nav-item" data-page="progress">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M3 3v18h18"></path>
+<path d="M18 17V9M13 17V5M8 17v-3"></path>
+</svg>
+<span>Progress</span>
+</div>
+</div>
+</nav>
+</div>
+
+<script src="script.js"></script></body>
+</html>
